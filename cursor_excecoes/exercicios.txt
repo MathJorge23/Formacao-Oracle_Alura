@@ -1,0 +1,182 @@
+-- criação tabela
+CREATE TABLE CLIENTE_EXERCICIO( 
+ID NUMBER PRIMARY KEY,
+NOME VARCHAR2 (100),
+SEGMERCADO_ID NUMBER,
+STATUS VARCHAR2(20));
+
+-- INCLUINDO DADOS NA TABELA 
+INSERT INTO CLIENTE_EXERCICIO VALUES (1, 'Ana', 1, 'ATIVO');
+INSERT INTO CLIENTE_EXERCICIO VALUES (2, 'Bruno', 1, 'ATIVO');
+INSERT INTO CLIENTE_EXERCICIO VALUES (3, 'Carlos', 2, 'INATIVO');
+INSERT INTO CLIENTE_EXERCICIO VALUES (4, 'Daniela', 2, 'ATIVO');
+INSERT INTO CLIENTE_EXERCICIO VALUES (5, 'Eduardo', 3, 'ATIVO');
+INSERT INTO CLIENTE_EXERCICIO VALUES (6, 'Fernanda', 3, 'INATIVO');
+INSERT INTO CLIENTE_EXERCICIO VALUES (7, 'Gabriel', 1, 'ATIVO');
+INSERT INTO CLIENTE_EXERCICIO VALUES (8, 'Helena', 2, 'ATIVO');
+INSERT INTO CLIENTE_EXERCICIO VALUES (9, 'Igor', 3, 'ATIVO');
+INSERT INTO CLIENTE_EXERCICIO VALUES (10, 'Juliana', 1, 'INATIVO');
+
+COMMIT;
+
+-- VERIFICANDO DADOS
+SELECT * FROM cliente_exercicio ;
+
+-- PROCEDURE BASE PARA EXERCICIOS
+CREATE OR REPLACE PROCEDURE ATUALIZAR_SEGMERCADO_EX (
+    p_ID IN CLIENTE_EXERCICIO.ID%TYPE,
+    p_SEGMERCADO_ID IN CLIENTE_EXERCICIO.SEGMERCADO_ID%TYPE
+) IS
+BEGIN
+    UPDATE CLIENTE_EXERCICIO
+       SET SEGMERCADO_ID = p_SEGMERCADO_ID
+     WHERE ID = p_ID;
+END;
+/
+
+/* ---------------------------------------------------------
+   EXERCÍCIO 1
+   Atualize o SEGMERCADO_ID para 4 de TODOS os clientes.
+   Regras:
+   - Use LOOP ... END LOOP
+   - Use variável de controle para o ID
+   - Use EXIT WHEN
+---------------------------------------------------------- */
+DECLARE 
+    V_SEGMERCADO CLIENTE_EXERCICIO.segmercado_id%type :=4;
+    V_ID CLIENTE_EXERCICIO.id%type :=1;
+BEGIN
+    LOOP
+        ATUALIZAR_SEGMERCADO_EX(V_ID, V_SEGMERCADO);
+        V_ID := V_ID +1;
+        EXIT WHEN V_ID > 11;
+    END LOOP;
+END;
+
+/* ---------------------------------------------------------
+   EXERCÍCIO 2
+   Refaça o exercício 1 utilizando:
+   - FOR ... LOOP
+   - Quantidade de clientes obtida com COUNT(*)
+---------------------------------------------------------- */
+DECLARE 
+    V_SEGMERCADO CLIENTE_EXERCICIO.segmercado_id%type :=3;
+    V_CLI INTEGER;
+BEGIN
+    SELECT COUNT(*) INTO V_CLI FROM CLIENTE_EXERCICIO;
+    
+    FOR V_ID IN 1..V_CLI LOOP
+        atualizar_segmercado_ex(V_ID, V_SEGMERCADO);
+    END LOOP;
+END;
+
+/* ---------------------------------------------------------
+   EXERCÍCIO 3
+   Atualize o SEGMERCADO_ID para 5 APENAS dos clientes ATIVOS.
+   Regras:
+   - Use FOR
+   - Use IF dentro do loop
+   - NÃO usar WHERE dentro da procedure
+---------------------------------------------------------- */
+DECLARE 
+    V_SEGMERCADO CLIENTE_EXERCICIO.segmercado_id%type := 5;
+    
+BEGIN 
+    
+   FOR C IN (SELECT ID, STATUS FROM cliente_exercicio c) LOOP
+    IF C.STATUS = 'ATIVO' THEN 
+        atualizar_segmercado_ex(c.ID, V_SEGMERCADO);
+    END IF;    
+    END LOOP;
+END;
+SELECT * FROM cliente_exercicio ;
+
+/* ---------------------------------------------------------
+   EXERCÍCIO 4
+   Atualize o SEGMERCADO_ID para 2 usando WHILE.
+   Regras:
+   - Percorrer todos os clientes
+   - Interromper o loop ao encontrar um cliente INATIVO
+---------------------------------------------------------- */
+DECLARE 
+    V_SEGMERCADO CLIENTE_EXERCICIO.segmercado_id%type :=2;
+    V_ID CLIENTE_EXERCICIO.ID%TYPE := 1;
+    V_TOTAL NUMBER;
+    V_STATUS CLIENTE_EXERCICIO.STATUS%TYPE;
+BEGIN 
+    SELECT COUNT (*) INTO V_TOTAL FROM CLIENTE_EXERCICIO;
+    
+   WHILE V_ID <= V_TOTAL LOOP
+    
+    SELECT STATUS INTO V_STATUS FROM CLIENTE_EXERCICIO WHERE ID= V_ID;
+    
+    IF V_STATUS = 'INATIVO' THEN 
+        EXIT;
+    ELSE
+        atualizar_segmercado_ex(V_ID, V_SEGMERCADO);
+    END IF; 
+    V_ID:= V_ID +1;
+    END LOOP;
+END;
+SELECT * FROM cliente_exercicio ;
+
+
+/* ---------------------------------------------------------
+   EXERCÍCIO 5
+   Percorra todos os clientes e conte:
+   - Quantos estão com STATUS = 'ATIVO'
+   Regras:
+   - Use LOOP ou FOR
+   - Exiba o resultado com DBMS_OUTPUT.PUT_LINE
+---------------------------------------------------------- */
+
+
+/* ---------------------------------------------------------
+   EXERCÍCIO 6
+   Atualize o SEGMERCADO_ID para 9 SOMENTE dos clientes
+   cujo ID seja PAR.
+   Regras:
+   - Use FOR
+   - Use a função MOD para verificar se o ID é par
+---------------------------------------------------------- */
+
+
+/* ---------------------------------------------------------
+   EXERCÍCIO 7
+   Percorra os clientes e:
+   - Ao encontrar o cliente chamado 'Helena'
+   - Atualize o SEGMERCADO_ID para 7
+   - Saia imediatamente do loop
+---------------------------------------------------------- */
+
+
+/* ---------------------------------------------------------
+   EXERCÍCIO 8
+   Atualize todos os clientes que estão no SEGMERCADO_ID = 1
+   para SEGMERCADO_ID = 8.
+   Regras:
+   - Use FOR
+   - Use IF
+   - Passe os parâmetros da procedure de forma nomeada
+---------------------------------------------------------- */
+
+
+/* ---------------------------------------------------------
+   EXERCÍCIO 9
+   Percorra todos os clientes e:
+   - Se o STATUS for 'INATIVO'
+   - Atualize o STATUS para 'PENDENTE'
+   Regras:
+   - Use WHILE
+---------------------------------------------------------- */
+
+
+/* ---------------------------------------------------------
+   EXERCÍCIO 10 (DESAFIO)
+   Percorra todos os clientes e:
+   - Se o STATUS for 'ATIVO' → SEGMERCADO_ID = 10
+   - Se o STATUS for 'INATIVO' → SEGMERCADO_ID = 0
+   Regras:
+   - Use FOR
+   - Use CASE dentro do loop
+---------------------------------------------------------- */
