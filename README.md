@@ -116,7 +116,7 @@ Este repositório foi criado com fins de **estudo e portfólio**, com foco em:
 
 Curso realizado na plataforma **Alura**:
 
-🔗 Curso: [[https://github.com/MathJorge2](https://cursos.alura.com.br/formacao-oracle-database-sql-plsql)
+🔗 Curso: [https://cursos.alura.com.br/formacao-oracle-database-sql-plsql](https://cursos.alura.com.br/formacao-oracle-database-sql-plsql)
 
 ---
 
